@@ -6,7 +6,6 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
-	"log"
 )
 
 //数据库配置
@@ -21,7 +20,7 @@ const (
 var DB *sql.DB
 var (
 	ErrNoRows = errors.New("错误类型ErrNoRows")
-	ErrConnD  = errors.New("数据库链接失败")
+	ErrConnD = errors.New("数据库链接失败")
 )
 
 func InitDB() error {
@@ -58,15 +57,7 @@ type User struct {
 func SelectUserById(name string) (users []User, err error) {
 	var (
 		user User
-		s    sql.NullInt32
 	)
-
-	err = DB.QueryRow("SELECT sex FROM user where name=?", "Wq").Scan(&s) //即将得到的name值转换成s.String类型并存储到&s中
-	log.Println("测试零值：", err)
-	if err != nil {
-		return nil, errors.Wrapf(ErrNoRows, "查询字符串错误")
-	}
-
 	err = DB.QueryRow("select * from user where name = ?", "WQ").Scan(&user)
 	fmt.Println(errors.Is(err, sql.ErrNoRows))
 	if err != nil {
